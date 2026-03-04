@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>South Wind Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1a2235;
+      --slate:  #2c3e55;
+      --cream:  #f5f1ea;
+      --warm:   #faf8f4;
+      --brass:  #b8965a;
+      --brass-light: #d4ae78;
+      --muted:  #6b7a8d;
+      --text:   #1a2235;
+      --border: rgba(26, 34, 53, 0.1);
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--warm);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── Nav ───────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 5vw;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(250, 248, 244, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    nav.scrolled {
+      border-color: var(--border);
+      background: rgba(250, 248, 244, 0.97);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+      color: var(--navy);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--brass);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--navy); }
+
+    .nav-cta {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brass) !important;
+      border: 1px solid var(--brass);
+      padding: 0.45rem 1.1rem;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--brass) !important;
+      color: white !important;
+    }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block; width: 22px; height: 2px;
+      background: var(--navy);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* ─── Hero ──────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      background: var(--navy);
+      display: flex;
+      align-items: flex-end;
+      padding: 12vh 5vw 12vh 8vw;
+      position: relative;
+    }
+
+    .hero-left::after {
+      content: '';
+      position: absolute;
+      top: 0; right: -1px; bottom: 0;
+      width: 2px;
+      background: var(--brass);
+      opacity: 0.7;
+    }
+
+    /* Subtle texture overlay */
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 20% 80%, rgba(184,150,90,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(184,150,90,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-left-content { position: relative; z-index: 1; }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3rem, 5vw, 5rem);
+      line-height: 1.08;
+      color: var(--cream);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.4s forwards;
+    }
+
+    .hero-heading em {
+      font-style: italic;
+      color: var(--brass-light);
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: rgba(245,241,234,0.65);
+      max-width: 380px;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.6s forwards;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      padding: 0.85rem 1.8rem;
+      background: var(--brass);
+      border-radius: 2px;
+      transition: background 0.25s, transform 0.2s;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.8s forwards;
+    }
+
+    .hero-btn:hover {
+      background: var(--brass-light);
+      transform: translateY(-2px);
+    }
+
+    .hero-btn svg { flex-shrink: 0; }
+
+    .hero-right {
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8vh 6vw;
+      position: relative;
+    }
+
+    /* Decorative geometric element */
+    .hero-graphic {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .hero-graphic-ring {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      border: 1px solid rgba(184,150,90,0.25);
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: slowSpin 30s linear infinite;
+    }
+
+    .hero-graphic-ring::before {
+      content: '';
+      position: absolute;
+      top: -4px; left: 50%;
+      width: 8px; height: 8px;
+      background: var(--brass);
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
+
+    .hero-graphic-ring-2 {
+      width: 220px;
+      height: 220px;
+      animation-duration: 20s;
+      animation-direction: reverse;
+    }
+
+    .hero-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.9s 1s forwards;
+    }
+
+    .hero-stat {
+      background: var(--warm);
+      padding: 2rem 1.8rem;
+      transition: background 0.2s;
+    }
+    .hero-stat:hover { background: white; }
+
+    .hero-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-stat-num span {
+      color: var(--brass);
+    }
+
+    .hero-stat-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ─── Section Shared ────────────────────────────────── */
+    section { scroll-margin-top: 68px; }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 9rem 5vw;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--brass);
+    }
+
+    .section-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      line-height: 1.15;
+      color: var(--navy);
+    }
+
+    .section-heading em {
+      font-style: italic;
+      color: var(--brass);
+    }
+
+    /* ─── About ─────────────────────────────────────────── */
+    #about { background: var(--warm); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      margin-top: 4rem;
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--slate);
+      line-height: 1.85;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-text strong {
+      font-weight: 500;
+      color: var(--navy);
+    }
+
+    .about-pillars {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+
+    .pillar {
+      padding: 1.6rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: white;
+      transition: background 0.2s;
+      cursor: default;
+    }
+
+    .pillar:last-child { border-bottom: none; }
+    .pillar:hover { background: var(--cream); }
+
+    .pillar-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      background: var(--navy);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .pillar-icon svg { color: var(--brass-light); }
+
+    .pillar-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--navy);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .pillar-desc {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ─── Services ──────────────────────────────────────── */
+    #services {
+      background: var(--navy);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #services::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 0% 100%, rgba(184,150,90,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 100% 0%, rgba(184,150,90,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    #services .section-label { color: var(--brass); }
+    #services .section-label::before { background: var(--brass); }
+    #services .section-heading { color: var(--cream); }
+
+    .services-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      margin-bottom: 5rem;
+    }
+
+    .services-intro {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: rgba(245,241,234,0.6);
+      line-height: 1.85;
+      align-self: end;
+    }
+
+    .service-card {
+      border: 1px solid rgba(245,241,234,0.1);
+      background: rgba(255,255,255,0.03);
+      padding: 3rem;
+      position: relative;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+    }
+
+    .service-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(184,150,90,0.35);
+      transform: translateY(-4px);
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 0;
+      background: var(--brass);
+      transition: height 0.4s;
+    }
+
+    .service-card:hover::before { height: 100%; }
+
+    .service-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      font-weight: 300;
+      color: rgba(184,150,90,0.2);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .service-desc {
+      font-size: 0.92rem;
+      font-weight: 300;
+      color: rgba(245,241,234,0.6);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .service-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .service-features li {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: rgba(245,241,234,0.75);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .service-features li::before {
+      content: '';
+      display: block;
+      width: 16px;
+      height: 1px;
+      background: var(--brass);
+      flex-shrink: 0;
+    }
+
+    .service-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brass);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: gap 0.2s, color 0.2s;
+    }
+
+    .service-link:hover {
+      color: var(--brass-light);
+      gap: 0.85rem;
+    }
+
+    /* ─── Contact / Footer ──────────────────────────────── */
+    #contact {
+      background: var(--cream);
+    }
+
+    .contact-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 9rem 5vw 5rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      margin-top: 4rem;
+    }
+
+    .contact-text {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--slate);
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: var(--navy);
+      font-weight: 400;
+    }
+
+    .contact-item-icon {
+      width: 38px; height: 38px;
+      background: var(--navy);
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-item-icon svg { color: var(--brass-light); }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .form-group label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 300;
+      color: var(--navy);
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--brass);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-btn {
+      align-self: flex-start;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: white;
+      background: var(--navy);
+      border: none;
+      border-radius: 2px;
+      padding: 0.9rem 2rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .form-btn:hover {
+      background: var(--brass);
+      transform: translateY(-2px);
+    }
+
+    /* ─── Footer bar ────────────────────────────────────── */
+    footer {
+      background: var(--navy);
+      padding: 2.2rem 5vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      color: var(--cream);
+    }
+
+    .footer-logo span { color: var(--brass); }
+
+    .footer-copy {
+      font-size: 0.78rem;
+      color: rgba(245,241,234,0.35);
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── Divider ────────────────────────────────────────── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ─── Animations ────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slowSpin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.22s; }
+    .reveal-delay-3 { transition-delay: 0.34s; }
+
+    /* ─── Responsive ────────────────────────────────────── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 12vh 7vw 6vh; }
+      .hero-left::after { display: none; }
+      .hero-right { padding: 6vh 7vw 10vh; }
+      .hero-stat-grid { max-width: 400px; }
+      .about-grid,
+      .services-header,
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .nav-links { display: none; flex-direction: column; gap: 0; }
+      .nav-links.open {
+        display: flex;
+        position: absolute;
+        top: 68px; left: 0; right: 0;
+        background: rgba(250,248,244,0.98);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 5vw;
+      }
+      .nav-links.open a { padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+      .nav-toggle { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Navigation ─────────────────────────── -->
+  <nav id="navbar">
+    <a href="#hero" class="nav-logo">South Wind <span>Solutions</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ─── Hero ───────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-left">
+      <div class="hero-left-content">
+        <p class="hero-eyebrow">Digital Services for Small Businesses</p>
+        <h1 class="hero-heading">
+          Smarter tools.<br><em>Stronger</em><br>businesses.
+        </h1>
+        <p class="hero-sub">
+          South Wind Solutions designs and delivers digital services built specifically for the way small businesses operate — practical, affordable, and effective.
+        </p>
+        <a href="#services" class="hero-btn">
+          Explore Our Current Projects
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-graphic">
+        <div class="hero-graphic-ring"></div>
+        <div class="hero-graphic-ring hero-graphic-ring-2"></div>
+        <div class="hero-stat-grid">
+          <div class="hero-stat">
+            <div class="hero-stat-num">Real</div>
+            <div class="hero-stat-label">People</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">100<span>%</span></div>
+            <div class="hero-stat-label">US-Based Team</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">Affordable</div>
+            <div class="hero-stat-label">pricing</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">Simple</div>
+            <div class="hero-stat-label">Solutions</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── About ──────────────────────────────── -->
+  <section id="about">
+    <div class="section-inner">
+      <p class="section-label reveal">Who We Are</p>
+      <h2 class="section-heading reveal reveal-delay-1">Built for the businesses<br>that build communities.</h2>
+
+      <div class="about-grid">
+        <div class="about-text reveal reveal-delay-2">
+          <p>
+            South Wind Solutions was founded with a single purpose: to give small businesses access to the same quality of digital tools and infrastructure that large companies take for granted — <strong>without the enterprise price tag.</strong>
+          </p>
+          <p>
+            We believe that technology should work for your business, not the other way around. That means worth while features, honest pricing, and solutions that actually increase productivity.
+          </p>
+          <p>
+            Whether you're just getting started or looking to level up your existing operations, we're here to make it straightforward.
+          </p>
+        </div>
+
+        <div class="about-pillars reveal reveal-delay-3">
+          <div class="pillar">
+            <div class="pillar-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div class="pillar-title">Trust First</div>
+              <div class="pillar-desc">Straightforward solutions, with clear no commitmant pricing</div>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div class="pillar-title">Built to Last</div>
+              <div class="pillar-desc">Solutions designed simple, which means you don't need to worry about downtime.</div>
+            </div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div class="pillar-title">Business-Centered</div>
+              <div class="pillar-desc">Services that actually get your business closer to its goals</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Services ───────────────────────────── -->
+  <section id="services">
+    <div class="section-inner">
+      <div class="services-header">
+        <div>
+          <p class="section-label reveal">What We Offer</p>
+          <h2 class="section-heading reveal reveal-delay-1">Our Services</h2>
+        </div>
+        <p class="services-intro reveal reveal-delay-2">
+          We're currently focused on a few core offerings. Delivered with full attention and care. As we grow, we'll be expanding our suite of services — always with the same level of quality.
+        </p>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-number">01</div>
+        <h3 class="service-title">Dallas Residential Roofing Permit Data Dashboard</h3>
+        <p class="service-desc">
+          A professional dashboard made for roofing contractors to give them the edge on getting thier next pay day.
+        </p>
+        <ul class="service-features">
+          <li>Daily updates for up to date data</li>
+          <li>Cleaned and curiated for easy of use</li>
+          <li>Optimized to be a simple useful tool for real world use cases</li>
+          <li>Ongoing maintenance and content updates</li>
+        </ul>
+        <a href="#" class="service-link">
+          Check it out!
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ──────────────────────────────── -->
+  <footer>
+    <div class="footer-logo">South Wind <span>Solutions</span></div>
+    <p class="footer-copy">© 2026 South Wind Solutions. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ─── Nav scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // ─── Mobile nav toggle
+    const toggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    // ─── Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ─── Form submit stub
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-btn');
+      btn.textContent = 'Message Sent ✓';
+      btn.style.background = '#5a8b5a';
+      setTimeout(() => {
+        btn.textContent = 'Send Message';
+        btn.style.background = '';
+        e.target.reset();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
